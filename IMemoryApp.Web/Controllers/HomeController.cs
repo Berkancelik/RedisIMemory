@@ -23,8 +23,9 @@ namespace IMemoryApp.Web.Controllers
         public IActionResult Index()
         {
             MemoryCacheEntryOptions options = new MemoryCacheEntryOptions();
-            options.AbsoluteExpiration = DateTime.Now.AddSeconds(10);
-            // aşağıdaki option ile birlikte yukarıdaki options a belirttiğimiz zaman kadar tanımlanmaktadır.
+            options.AbsoluteExpiration = DateTime.Now.AddMinutes(1);
+            options.SlidingExpiration = TimeSpan.FromSeconds(10);
+           
             _memoryCache.Set<string>("Times", DateTime.Now.ToString(), options);
             return View();
         }
