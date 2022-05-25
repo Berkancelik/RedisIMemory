@@ -30,8 +30,9 @@ namespace IMemoryApp.Web.Controllers
             {
                 _memoryCache.Set("callback", $"{key} -> {value} => sebep{reason}");
             }));
-
             _memoryCache.Set<string>("Times", DateTime.Now.ToString(), options);
+            Product p = new Product { Id = 1, Name = "Kalem", Price = 200 };
+            _memoryCache.Set<Product>("product:1", p);
             return View();
         }
         public IActionResult Show()
@@ -40,6 +41,8 @@ namespace IMemoryApp.Web.Controllers
             _memoryCache.TryGetValue("callback", out string callBack);
             ViewBag.time = TimesCache;
             ViewBag.callBack = callBack;
+
+            ViewBag.p = _memoryCache.Get<Product>("product:1");
             return View();
         }
 

@@ -1,7 +1,13 @@
 ﻿
 @{
     Layout = null;
+    Product p = ViewBag.p as Product;
 }
+
+
+
 
 <h1>@ViewBag.time</h1>
 <h1>@ViewBag.callBack</h1>
+
+<h3>@p.Id => @p.Name => @p.Price</h3>
