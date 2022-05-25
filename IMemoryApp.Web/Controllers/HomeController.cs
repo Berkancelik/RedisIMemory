@@ -23,16 +23,23 @@ namespace IMemoryApp.Web.Controllers
         public IActionResult Index()
         {
             MemoryCacheEntryOptions options = new MemoryCacheEntryOptions();
-            options.AbsoluteExpiration = DateTime.Now.AddMinutes(1);
-            options.SlidingExpiration = TimeSpan.FromSeconds(10);
-           
+            options.AbsoluteExpiration = DateTime.Now.AddSeconds(10);
+            //options.SlidingExpiration = TimeSpan.FromSeconds(10);
+            options.Priority = CacheItemPriority.High;
+            options.RegisterPostEvictionCallback(((key, value, reason, state) =>
+            {
+                _memoryCache.Set("callback", $"{key} -> {value} => sebep{reason}");
+            }));
+
             _memoryCache.Set<string>("Times", DateTime.Now.ToString(), options);
             return View();
         }
         public IActionResult Show()
         {
             _memoryCache.TryGetValue("Times", out string TimesCache);
+            _memoryCache.TryGetValue("callback", out string callBack);
             ViewBag.time = TimesCache;
+            ViewBag.callBack = callBack;
             return View();
         }
 
