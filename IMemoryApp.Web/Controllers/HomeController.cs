@@ -21,8 +21,16 @@ namespace IMemoryApp.Web.Controllers
 
         public IActionResult Index()
         {
+            _memoryCache.Set<String>("Times",DateTime.Now.ToString());
             return View();
         }
+
+        public IActionResult Show()
+        {
+            ViewBag.time = _memoryCache.Get<String>("Times");
+            return View();
+        }
+
 
         public IActionResult Privacy()
         {
