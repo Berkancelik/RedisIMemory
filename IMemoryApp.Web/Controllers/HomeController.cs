@@ -21,12 +21,41 @@ namespace IMemoryApp.Web.Controllers
 
         public IActionResult Index()
         {
-            _memoryCache.Set<String>("Times",DateTime.Now.ToString());
-            return View();
+            // 1. Tol
+            if (String.IsNullOrEmpty(_memoryCache.Get<string>("zaman"))
+            {
+                _memoryCache.Set<String>("Times", DateTime.Now.ToString());
+
+                //2. Yol 
+                // aşağıda hem cache true döner hemde zaman cache sine sahip olan değerin valuesini, timecache değerine atayacaktır
+                if (_memoryCache.TryGetValue("Times", out string timescache))
+                {
+                    _memoryCache.Set<String>("Times", DateTime.Now.ToString());
+
+                }
+
+                timescache
+
+
+
+
+
+
+                return View();
+
+            }
         }
 
         public IActionResult Show()
         {
+            //siler
+            _memoryCache.Remove("Times");
+            // Bu Key'e sahip değeri ara yoksa oluştur
+            _memoryCache.GetOrCreate<string>("time", entry =>
+            {
+                return DateTime.Now.ToString();
+            });
+
             ViewBag.time = _memoryCache.Get<String>("Times");
             return View();
         }
