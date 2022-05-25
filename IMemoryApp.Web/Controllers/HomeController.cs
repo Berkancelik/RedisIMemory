@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,42 +22,16 @@ namespace IMemoryApp.Web.Controllers
 
         public IActionResult Index()
         {
-            // 1. Tol
-            if (String.IsNullOrEmpty(_memoryCache.Get<string>("zaman"))
-            {
-                _memoryCache.Set<String>("Times", DateTime.Now.ToString());
-
-                //2. Yol 
-                // aşağıda hem cache true döner hemde zaman cache sine sahip olan değerin valuesini, timecache değerine atayacaktır
-                if (_memoryCache.TryGetValue("Times", out string timescache))
-                {
-                    _memoryCache.Set<String>("Times", DateTime.Now.ToString());
-
-                }
-
-                timescache
-
-
-
-
-
-
-                return View();
-
-            }
+            MemoryCacheEntryOptions options = new MemoryCacheEntryOptions();
+            options.AbsoluteExpiration = DateTime.Now.AddSeconds(10);
+            // aşağıdaki option ile birlikte yukarıdaki options a belirttiğimiz zaman kadar tanımlanmaktadır.
+            _memoryCache.Set<string>("Times", DateTime.Now.ToString(), options);
+            return View();
         }
-
         public IActionResult Show()
         {
-            //siler
-            _memoryCache.Remove("Times");
-            // Bu Key'e sahip değeri ara yoksa oluştur
-            _memoryCache.GetOrCreate<string>("time", entry =>
-            {
-                return DateTime.Now.ToString();
-            });
-
-            ViewBag.time = _memoryCache.Get<String>("Times");
+            _memoryCache.TryGetValue("Times", out string TimesCache);
+            ViewBag.time = TimesCache;
             return View();
         }
 
