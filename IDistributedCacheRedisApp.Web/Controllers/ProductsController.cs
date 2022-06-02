@@ -14,6 +14,25 @@ namespace IDistributedCacheRedisApp.Web.Controllers
             _distributedCache = distributedCache;
         }
 
-   
+        public IActionResult Index()
+        {
+            DistributedCacheEntryOptions cacheEntryOptions = new DistributedCacheEntryOptions();
+            cacheEntryOptions.AbsoluteExpiration = DateTime.Now.AddMinutes(1);
+            _distributedCache.SetString("Name", "Berkan", cacheEntryOptions);
+            return View();
+        }
+
+        public IActionResult Show()
+        {
+            string nane = _distributedCache.GetString("name");
+            return View();
+        }
+
+        public IActionResult Remove()
+        {
+            _distributedCache.Remove("name");
+            return View();
+        }
+
     }
 }
