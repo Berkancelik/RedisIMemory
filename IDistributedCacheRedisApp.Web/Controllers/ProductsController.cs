@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using System;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,7 +18,7 @@ namespace IDistributedCacheRedisApp.Web.Controllers
             _distributedCache = distributedCache;
         }
 
-        public async Task<IActionResult> Index()
+        public  IActionResult Index()
         {
             DistributedCacheEntryOptions cacheEntryOptions = new DistributedCacheEntryOptions();
             cacheEntryOptions.AbsoluteExpiration = DateTime.Now.AddMinutes(1);
@@ -47,6 +48,18 @@ namespace IDistributedCacheRedisApp.Web.Controllers
         public IActionResult Remove()
         {
             _distributedCache.Remove("name");
+            return View();
+        }
+        public IActionResult ImageUrl()
+        {
+            byte[] imageByte = _distributedCache.Get("resim");
+            return File(imageByte, "image/jpg");
+        }
+        public IActionResult ImageCache()
+        {
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/download.jpg");
+            byte[] imageByte = System.IO.File.ReadAllBytes(path);
+            _distributedCache.Set("resim", imageByte);
             return View();
         }
 
