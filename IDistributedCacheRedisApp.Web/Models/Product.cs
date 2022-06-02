@@ -1,4 +1,4 @@
-﻿namespace IMemoryApp.Web.Models
+﻿namespace IDistributedCacheRedisApp.Web.Models
 {
     public class Product
     {
